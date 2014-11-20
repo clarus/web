@@ -14,9 +14,9 @@ ENV HOME /home/clarus
 # Add the websites.
 USER clarus
 WORKDIR /home/clarus
-RUN echo 1
-RUN hg clone https://bitbucket.org/guillaumeclaret/www guillaume
-WORKDIR guillaume
+RUN echo 2
+RUN hg clone https://bitbucket.org/guillaumeclaret/www
+WORKDIR www
 RUN ruby make.rb
 
 # Set the Nginx configuration.
