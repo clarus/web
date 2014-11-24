@@ -3,9 +3,10 @@ MAINTAINER Guillaume Claret
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y git mercurial
-RUN apt-get install -y ruby
-RUN apt-get install -y nginx
-RUN apt-get install -y make
+RUN apt-get install -y nginx curl
+RUN apt-get install -y gcc make ruby-dev
+
+RUN gem install redcarpet
 
 # Add a user clarus.
 RUN useradd --create-home clarus
@@ -20,10 +21,10 @@ WORKDIR www
 RUN ruby make.rb
 
 # Add the blog.
-RUN git clone https://github.com/clarus/light-blog blog
-WORKDIR blog
-RUN git clone https://github.com/clarus/blog-posts posts
-RUN TITLE=Clarus DISQU=login make
+RUN git clone https://github.com/clarus/coq-blog coq-blog
+WORKDIR coq-blog
+RUN curl -L https://github.com/clarus/coq-red-css/releases/download/1.0.0/style.min.css >static/style.min.css
+RUN make
 
 # Set the Nginx configuration.
 USER root
