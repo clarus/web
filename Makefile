@@ -1,4 +1,5 @@
 build:
+	touch force_update
 	docker build --tag=web .
 
 start:

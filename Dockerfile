@@ -18,6 +18,9 @@ RUN useradd --create-home clarus
 USER clarus
 ENV HOME /home/clarus
 
+# Hack: we force to rebuild the container here.
+ADD force_update /
+
 # Add the websites.
 USER clarus
 WORKDIR /home/clarus
