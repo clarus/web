@@ -1,5 +1,6 @@
 # Web
 The configuration of my web server.
 
-    docker build --tag=web .
-    docker run -ti -p 80:80 -v `pwd`/log:/var/log/nginx -d web
+    make # build the container `web`
+    make stop # stop the server
+    make start # start the server
