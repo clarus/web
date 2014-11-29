@@ -31,7 +31,7 @@ RUN ruby make.rb
 # Add the blog.
 RUN git clone https://github.com/clarus/coq-blog coq-blog
 WORKDIR coq-blog
-RUN curl -L https://github.com/clarus/coq-red-css/releases/download/1.0.0/style.min.css >static/style.min.css
+RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.1/style.min.css >static/style.min.css
 RUN make
 
 # Run Nginx.
