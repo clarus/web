@@ -10,8 +10,9 @@ RUN gem install redcarpet
 # Set the Nginx configuration.
 WORKDIR /etc/nginx
 RUN rm sites-enabled/default
-ADD nginx.conf /etc/nginx/sites-available/all
+ADD all /etc/nginx/sites-available/all
 RUN ln -rs sites-available/all sites-enabled/
+ADD cache.conf /etc/nginx/cache.conf
 
 # Add a user clarus.
 RUN useradd --create-home clarus
