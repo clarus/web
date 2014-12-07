@@ -15,24 +15,29 @@ server {
 server {
   server_name coq-blog.clarus.me;
   root /home/clarus/www/coq-blog/blog;
+  include cache.conf;
 }
 
 server {
   server_name minette.claret.me;
   root /home/clarus/www/minette;
+  include cache.conf;
 }
 
 server {
   server_name claret.io;
   root /home/clarus/www/io;
+  include cache.conf;
 }
 
 server {
   server_name clarus.io;
   root /home/clarus/www/io;
+  include cache.conf;
 }
 
 server {
   server_name coq.io;
   root /home/clarus/www/io;
+  include cache.conf;
 }
