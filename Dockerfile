@@ -7,6 +7,7 @@ RUN apt-get install -y gcc make ruby-dev
 RUN apt-get install -y texlive-latex-base
 RUN apt-get install -y texlive-latex-extra
 RUN apt-get install -y texlive-fonts-recommended
+RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
 RUN gem install redcarpet
@@ -22,24 +23,6 @@ ADD cache.conf /etc/nginx/cache.conf
 RUN useradd --create-home clarus
 USER clarus
 ENV HOME /home/clarus
-
-# Hack: we force to rebuild the container here.
-ADD force_update /
-
-# Add the main website.
-USER clarus
-WORKDIR /home/clarus
-RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-www-* www
-WORKDIR www
-RUN ruby make.rb
-
-# Add the blog.
-RUN curl -L https://github.com/clarus/coq-blog/archive/master.tar.gz |tar -xz
-RUN mv coq-blog-master coq-blog
-WORKDIR coq-blog
-RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
-RUN make
 
 # Add the projects contents.
 WORKDIR /home/clarus
@@ -124,6 +107,8 @@ WORKDIR yale-reports-coqfu
 RUN TERM=xterm make
 WORKDIR ..
 
+RUN echo qskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfjqskjdfqlskjfqslkdfjsldkfjslkdfj
+
 RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
 RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
 WORKDIR yale-reports-queue
@@ -135,6 +120,23 @@ RUN mv guillaumeclaret-yale-reports-main-* yale-reports-main
 WORKDIR yale-reports-main
 RUN TERM=xterm make
 WORKDIR ..
+
+# Hack: we force to rebuild the container here.
+ADD force_update /
+
+# Add the main website.
+WORKDIR /home/clarus
+RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -xj
+RUN mv guillaumeclaret-www-* www
+WORKDIR www
+RUN ruby make.rb
+
+# Add the blog.
+RUN curl -L https://github.com/clarus/coq-blog/archive/master.tar.gz |tar -xz
+RUN mv coq-blog-master coq-blog
+WORKDIR coq-blog
+RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
+RUN make
 
 # Run Nginx.
 USER root
