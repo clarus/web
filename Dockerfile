@@ -107,15 +107,15 @@ WORKDIR yale-reports-coqfu
 RUN TERM=xterm make
 WORKDIR ..
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
-WORKDIR yale-reports-queue
-RUN TERM=xterm make
-WORKDIR ..
-
 RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-main/get/default.tar.bz2 |tar -xj
 RUN mv guillaumeclaret-yale-reports-main-* yale-reports-main
 WORKDIR yale-reports-main
+RUN TERM=xterm make
+WORKDIR ..
+
+RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
+RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
+WORKDIR yale-reports-queue
 RUN TERM=xterm make
 WORKDIR ..
 
