@@ -16,6 +16,7 @@ server {
   server_name coq-blog.clarus.me;
   root /home/clarus/www/coq-blog/blog;
   include cache.conf;
+  rewrite /pluto--a-first-web-server-written-in-coq.html http://coq-blog.clarus.me/pluto-a-first-concurrent-web-server-in-gallina.html permanent;
 }
 
 server {

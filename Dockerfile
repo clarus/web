@@ -12,13 +12,6 @@ RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
 RUN gem install redcarpet
 
-# Set the Nginx configuration.
-WORKDIR /etc/nginx
-RUN rm sites-enabled/default
-ADD all /etc/nginx/sites-available/all
-RUN ln -rs sites-available/all sites-enabled/
-ADD cache.conf /etc/nginx/cache.conf
-
 # Add a user clarus.
 RUN useradd --create-home clarus
 USER clarus
@@ -136,7 +129,14 @@ WORKDIR coq-blog
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
 RUN make
 
-# Run Nginx.
+# Set the Nginx configuration.
 USER root
+WORKDIR /etc/nginx
+RUN rm sites-enabled/default
+ADD all /etc/nginx/sites-available/all
+RUN ln -rs sites-available/all sites-enabled/
+ADD cache.conf /etc/nginx/cache.conf
+
+# Run Nginx.
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
