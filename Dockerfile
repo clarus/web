@@ -121,6 +121,9 @@ RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -
 RUN mv guillaumeclaret-www-* www
 WORKDIR www
 RUN ruby make.rb
+WORKDIR coq.io
+RUN ruby make.rb
+WORKDIR ..
 
 # Add the blog.
 RUN curl -L https://github.com/clarus/coq-blog/archive/master.tar.gz |tar -xz
