@@ -24,7 +24,7 @@ USER clarus
 ENV HOME /home/clarus
 
 # Hack: we force to rebuild the container here.
-# ADD force_update /
+ADD force_update /
 
 # Add the main website.
 USER clarus
@@ -124,17 +124,17 @@ WORKDIR yale-reports-coqfu
 RUN TERM=xterm make
 WORKDIR ..
 
-# RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
-# RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
-# WORKDIR yale-reports-queue
-# RUN TERM=xterm make
-# WORKDIR ..
+RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
+RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
+WORKDIR yale-reports-queue
+RUN TERM=xterm make
+WORKDIR ..
 
-# RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-main/get/default.tar.bz2 |tar -xj
-# RUN mv guillaumeclaret-yale-reports-main-* yale-reports-main
-# WORKDIR yale-reports-main
-# RUN TERM=xterm make
-# WORKDIR ..
+RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-main/get/default.tar.bz2 |tar -xj
+RUN mv guillaumeclaret-yale-reports-main-* yale-reports-main
+WORKDIR yale-reports-main
+RUN TERM=xterm make
+WORKDIR ..
 
 # Run Nginx.
 USER root
