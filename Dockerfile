@@ -21,96 +21,55 @@ ENV HOME /home/clarus
 WORKDIR /home/clarus
 RUN mkdir projects
 WORKDIR projects
+ADD make_reports.rb /home/clarus/projects/make_reports.rb
+RUN ruby make_reports.rb
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/cv-english/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-cv-english-* cv-english
-WORKDIR cv-english
-RUN TERM=xterm make
-WORKDIR ..
+# OCaml
+WORKDIR /home/clarus
+RUN curl -L https://github.com/ocaml/ocaml/archive/4.02.1.tar.gz |tar -xz
+WORKDIR ocaml-4.02.1
+RUN ./configure
+RUN make world.opt
+USER root
+RUN make install
+USER clarus
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/cv-french/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-cv-french-* cv-french
-WORKDIR cv-french
-RUN TERM=xterm make
-WORKDIR ..
+# Camlp4
+WORKDIR /home/clarus
+RUN curl -L https://github.com/ocaml/camlp4/archive/4.02.1+1.tar.gz |tar -xz
+WORKDIR camlp4-4.02.1-1
+RUN ./configure
+RUN make all
+USER root
+RUN make install
+USER clarus
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/m2-reports-hoare/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-m2-reports-hoare-* m2-reports-hoare
-WORKDIR m2-reports-hoare
-RUN TERM=xterm make
-WORKDIR ..
+# Additional packages.
+USER root
+RUN apt-get install -y git m4
+USER clarus
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/m2-reports-main/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-m2-reports-main-* m2-reports-main
-WORKDIR m2-reports-main
-RUN TERM=xterm make
-WORKDIR ..
+# OPAM
+WORKDIR /home/clarus
+RUN curl -L https://github.com/ocaml/opam/archive/1.2.0.tar.gz |tar -xz
+WORKDIR opam-1.2.0
+RUN ./configure
+RUN make lib-ext
+RUN make
+USER root
+RUN make install
+USER clarus
+RUN opam init
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/m2-reports-slides/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-m2-reports-slides-* m2-reports-slides
-WORKDIR m2-reports-slides
-RUN TERM=xterm make
-WORKDIR ..
+# Coq
+RUN opam install -y coq
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/m2-reports-miniml/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-m2-reports-miniml-* m2-reports-miniml
-WORKDIR m2-reports-miniml
-RUN TERM=xterm make
-WORKDIR ..
+# Coq repositories
+RUN opam repo add coq-stable https://github.com/coq/repo-stable.git
+RUN opam repo add coq-unstable https://github.com/coq/repo-unstable.git
 
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-toplevel/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-toplevel-* phd-reports-toplevel
-WORKDIR phd-reports-toplevel
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-slidesejcp2013/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-slidesejcp2013-* phd-reports-slidesejcp2013
-WORKDIR phd-reports-slidesejcp2013
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-proposal2/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-proposal2-* phd-reports-proposal2
-WORKDIR phd-reports-proposal2
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-proposal/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-proposal-* phd-reports-proposal
-WORKDIR phd-reports-proposal
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-monad/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-monad-* phd-reports-monad
-WORKDIR phd-reports-monad
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/phd-reports-draft/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-phd-reports-draft-* phd-reports-draft
-WORKDIR phd-reports-draft
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-coqfu/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-yale-reports-coqfu-* yale-reports-coqfu
-WORKDIR yale-reports-coqfu
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-main/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-yale-reports-main-* yale-reports-main
-WORKDIR yale-reports-main
-RUN TERM=xterm make
-WORKDIR ..
-
-RUN curl -L https://bitbucket.org/guillaumeclaret/yale-reports-queue/get/default.tar.bz2 |tar -xj
-RUN mv guillaumeclaret-yale-reports-queue-* yale-reports-queue
-WORKDIR yale-reports-queue
-RUN TERM=xterm make
-WORKDIR ..
+# Pluto
+RUN opam install -y coq:concurrency:pluto
 
 # Hack: we force to rebuild the container here.
 ADD force_update /
