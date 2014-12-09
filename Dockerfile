@@ -19,12 +19,12 @@ RUN useradd --create-home clarus
 USER clarus
 ENV HOME /home/clarus
 
-# # Add the projects contents.
-# WORKDIR /home/clarus
-# RUN mkdir projects
-# WORKDIR projects
-# ADD make_reports.rb /home/clarus/projects/make_reports.rb
-# RUN ruby make_reports.rb
+# Add the projects contents.
+WORKDIR /home/clarus
+RUN mkdir projects
+WORKDIR projects
+ADD make_reports.rb /home/clarus/projects/make_reports.rb
+RUN ruby make_reports.rb
 
 # OPAM
 WORKDIR /home/clarus
@@ -47,7 +47,7 @@ RUN opam repo add coq-stable https://github.com/coq/repo-stable.git && opam repo
 RUN opam install -y coq:concurrency:pluto
 
 # Hack: we force to rebuild the container here.
-# ADD force_update /
+ADD force_update /
 
 # Add the main website.
 WORKDIR /home/clarus
@@ -77,4 +77,3 @@ EXPOSE 80
 WORKDIR /
 ADD run.rb /run.rb
 CMD ["ruby", "run.rb"]
-# CMD ["nginx", "-g", "daemon off;"]
