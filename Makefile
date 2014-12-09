@@ -3,7 +3,7 @@ build:
 	docker build --tag=web .
 
 test:
-	docker run -ti -p 80:80 web
+	docker run -ti -p 80:80 -p 8000:8000 web
 
 start:
 	docker run -ti -p 80:80 -v `pwd`/log:/var/log/nginx -d --name=web web

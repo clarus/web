@@ -11,7 +11,7 @@ RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
-RUN apt-get install -y ocaml-nox
+RUN apt-get install -y ocaml-nox aspcud
 RUN gem install redcarpet
 
 # Add a user clarus.
@@ -44,7 +44,7 @@ RUN opam install -y coq
 RUN opam repo add coq-stable https://github.com/coq/repo-stable.git && opam repo add coq-unstable https://github.com/coq/repo-unstable.git
 
 # Pluto
-RUN opam install -y coq:list-string.dev coq:concurrency:pluto
+RUN opam install -y coq:concurrency:pluto
 
 # Hack: we force to rebuild the container here.
 # ADD force_update /
