@@ -35,7 +35,7 @@ USER root
 RUN make install
 USER clarus
 RUN opam init && opam switch 4.02.1
-ENV OPAMJOBS 4
+ENV OPAMJOBS 2
 
 # Coq
 RUN opam install -y coq
@@ -74,7 +74,7 @@ ADD cache.conf /etc/nginx/cache.conf
 
 # Run the servers.
 EXPOSE 80
-EXPOSE 8000
 WORKDIR /
 ADD run.rb /run.rb
 CMD ["ruby", "run.rb"]
+# CMD ["nginx", "-g", "daemon off;"]

@@ -16,6 +16,8 @@ server {
   server_name coq-blog.clarus.me;
   # root /home/clarus/www/coq-blog/blog;
   # include cache.conf;
+
+  # We redirect to Pluto on the port 8000.
   location / {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header Host $http_host;
