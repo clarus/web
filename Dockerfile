@@ -2,6 +2,7 @@ FROM ubuntu
 MAINTAINER Guillaume Claret
 
 RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y git m4
 RUN apt-get install -y nginx curl
 RUN apt-get install -y gcc make ruby-dev
 RUN apt-get install -y texlive-latex-base
@@ -10,6 +11,7 @@ RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
+RUN apt-get install -y ocaml-nox
 RUN gem install redcarpet
 
 # Add a user clarus.
@@ -17,62 +19,35 @@ RUN useradd --create-home clarus
 USER clarus
 ENV HOME /home/clarus
 
-# Add the projects contents.
-WORKDIR /home/clarus
-RUN mkdir projects
-WORKDIR projects
-ADD make_reports.rb /home/clarus/projects/make_reports.rb
-RUN ruby make_reports.rb
-
-# OCaml
-WORKDIR /home/clarus
-RUN curl -L https://github.com/ocaml/ocaml/archive/4.02.1.tar.gz |tar -xz
-WORKDIR ocaml-4.02.1
-RUN ./configure
-RUN make world.opt
-USER root
-RUN make install
-USER clarus
-
-# Camlp4
-WORKDIR /home/clarus
-RUN curl -L https://github.com/ocaml/camlp4/archive/4.02.1+1.tar.gz |tar -xz
-WORKDIR camlp4-4.02.1-1
-RUN ./configure
-RUN make all
-USER root
-RUN make install
-USER clarus
-
-# Additional packages.
-USER root
-RUN apt-get install -y git m4
-USER clarus
+# # Add the projects contents.
+# WORKDIR /home/clarus
+# RUN mkdir projects
+# WORKDIR projects
+# ADD make_reports.rb /home/clarus/projects/make_reports.rb
+# RUN ruby make_reports.rb
 
 # OPAM
 WORKDIR /home/clarus
 RUN curl -L https://github.com/ocaml/opam/archive/1.2.0.tar.gz |tar -xz
 WORKDIR opam-1.2.0
-RUN ./configure
-RUN make lib-ext
-RUN make
+RUN ./configure && make lib-ext && make
 USER root
 RUN make install
 USER clarus
-RUN opam init
+RUN opam init && opam switch 4.02.1
+ENV OPAMJOBS 4
 
 # Coq
 RUN opam install -y coq
 
 # Coq repositories
-RUN opam repo add coq-stable https://github.com/coq/repo-stable.git
-RUN opam repo add coq-unstable https://github.com/coq/repo-unstable.git
+RUN opam repo add coq-stable https://github.com/coq/repo-stable.git && opam repo add coq-unstable https://github.com/coq/repo-unstable.git
 
 # Pluto
-RUN opam install -y coq:concurrency:pluto
+RUN opam install -y coq:list-string.dev coq:concurrency:pluto
 
 # Hack: we force to rebuild the container here.
-ADD force_update /
+# ADD force_update /
 
 # Add the main website.
 WORKDIR /home/clarus
@@ -80,9 +55,7 @@ RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -
 RUN mv guillaumeclaret-www-* www
 WORKDIR www
 RUN ruby make.rb
-WORKDIR coq.io
-RUN ruby make.rb
-WORKDIR ..
+RUN cd coq.io && ruby make.rb && cd ..
 
 # Add the blog.
 RUN curl -L https://github.com/clarus/coq-blog/archive/master.tar.gz |tar -xz
@@ -99,6 +72,9 @@ ADD all /etc/nginx/sites-available/all
 RUN ln -rs sites-available/all sites-enabled/
 ADD cache.conf /etc/nginx/cache.conf
 
-# Run Nginx.
+# Run the servers.
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 8000
+WORKDIR /
+ADD run.rb /run.rb
+CMD ["ruby", "run.rb"]
