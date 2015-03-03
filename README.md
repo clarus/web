@@ -9,4 +9,4 @@ The configuration of my web server.
 
 In practice:
 
-    make && make stop && make start
+    git pull && make && make stop ; make start
