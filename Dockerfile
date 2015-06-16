@@ -42,6 +42,14 @@ RUN mv coq-blog-master coq-blog
 WORKDIR coq-blog
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
 RUN make
+WORKDIR ..
+
+# Add coq.io.
+RUN curl -L https://github.com/coq-io/website/archive/master.tar.gz |tar -xz
+RUN mv website-master coq-io
+WORKDIR coq-io
+RUN make
+WORKDIR ..
 
 # Set the Nginx configuration.
 USER root

@@ -28,7 +28,7 @@ server {
 
 server {
   server_name claret.io;
-  root /home/clarus/www/io;
+  root /home/clarus/www/coq-io/output;
   include cache.conf;
 }
 
