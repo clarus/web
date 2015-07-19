@@ -11,6 +11,7 @@ RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
+RUN apt-get install -y ocaml-nox unzip aspcud
 RUN gem install redcarpet
 
 # Add a user clarus.
@@ -25,6 +26,16 @@ WORKDIR projects
 ADD make_reports.rb /home/clarus/projects/make_reports.rb
 RUN ruby make_reports.rb
 
+# Install OPAM.
+RUN curl -L https://github.com/ocaml/opam/archive/1.2.2.tar.gz |tar -xz
+WORKDIR opam-1.2.2
+RUN ./configure && make lib-ext && make
+USER root
+RUN make install
+USER clarus
+RUN opam init && opam repo add coq-released https://coq.inria.fr/opam/released
+RUN opam install -y coq:io:system:ocaml
+
 # Hack: we force to rebuild the container here.
 ADD force_update /
 
@@ -34,11 +45,12 @@ RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -
 RUN mv guillaumeclaret-www-* www
 WORKDIR www
 RUN ruby make.rb
-RUN cd coq.io && ruby make.rb && cd ..
+RUN cd coq.io && ruby make.rb
+WORKDIR ..
 
 # Add the blog.
 RUN curl -L https://github.com/clarus/coq-blog/archive/master.tar.gz |tar -xz
-RUN mv coq-blog-master coq-blog
+RUN mv coq-blog-* coq-blog
 WORKDIR coq-blog
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >static/style.min.css
 RUN make
@@ -46,10 +58,18 @@ WORKDIR ..
 
 # Add coq.io.
 RUN curl -L https://github.com/coq-io/website/archive/master.tar.gz |tar -xz
-RUN mv website-master coq-io
+RUN mv website-* coq-io
 WORKDIR coq-io
 RUN make
 WORKDIR ..
+
+# Add OpamWebsite.
+RUN curl -L https://github.com/coq-io/opam-website/archive/1.2.0.tar.gz |tar -xz
+RUN mv opam-website-* opam-website
+WORKDIR opam-website/extraction
+RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.2.0/opamWebsite.ml >opamWebsite.ml
+RUN eval `opam config env` make && ./opamWebsite.native && cp -R html ../../coq-io/output/opam
+WORKDIR ../..
 
 # Set the Nginx configuration.
 USER root
