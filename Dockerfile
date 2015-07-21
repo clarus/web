@@ -63,10 +63,10 @@ RUN make
 WORKDIR ..
 
 # Add OpamWebsite.
-RUN curl -L https://github.com/coq-io/opam-website/archive/1.2.1.tar.gz |tar -xz
+RUN curl -L https://github.com/coq-io/opam-website/archive/1.3.0.tar.gz |tar -xz
 RUN mv opam-website-* opam-website
 WORKDIR opam-website/extraction
-RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.2.1/opamWebsite.ml >opamWebsite.ml
+RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.3.0/opamWebsite.ml >opamWebsite.ml
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
 RUN eval `opam config env` make && opam update && ./opamWebsite.native && cp -R html ../../coq-io/output/opam
 WORKDIR ../..
