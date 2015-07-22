@@ -37,7 +37,7 @@ RUN opam init && opam repo add coq-released https://coq.inria.fr/opam/released
 RUN opam install -y coq:io:system:ocaml
 
 # Hack: we force to rebuild the container here.
-# ADD force_update /
+ADD force_update /
 
 # Add the main website.
 WORKDIR /home/clarus
