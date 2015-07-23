@@ -1,3 +1,0 @@
-#!/bin/sh
-
-sudo -u clarus /home/clarus/opam_website.sh >>/var/log/nginx/opam_website.log
