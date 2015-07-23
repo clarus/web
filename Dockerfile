@@ -82,7 +82,10 @@ ADD all /etc/nginx/sites-available/all
 RUN ln -rs sites-available/all sites-enabled/
 ADD cache.conf /etc/nginx/cache.conf
 
+# Set the syslog configuration.
+RUN echo "cron.*        /var/log/cron.log" >> /etc/rsyslog.conf
+
 # Run the servers.
 EXPOSE 80
 WORKDIR /
-CMD cron & nginx -g "daemon off;"
+CMD service rsyslog start && cron && tail -f /var/log/cron.log >/var/log/nginx/cron.log & nginx -g "daemon off;"
