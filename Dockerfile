@@ -37,7 +37,7 @@ RUN opam init && opam repo add coq-released https://coq.inria.fr/opam/released
 RUN opam install -y coq:io:system:ocaml
 
 # Hack: we force to rebuild the container here.
-ADD force_update /
+# ADD force_update /
 
 # Add the main website.
 WORKDIR /home/clarus
@@ -68,10 +68,9 @@ RUN mv opam-website-* opam-website
 WORKDIR opam-website/extraction
 RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.3.1/opamWebsite.ml >opamWebsite.ml
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
-ADD opam_website.sh /etc/cron.hourly/
-USER root
-RUN /etc/cron.hourly/opam_website.sh
-USER clarus
+ADD opam_website_hourly /etc/cron.hourly/
+ADD opam_website.sh /home/clarus/
+RUN /home/clarus/opam_website.sh
 WORKDIR ../..
 
 # Set the Nginx configuration.
@@ -83,7 +82,7 @@ RUN ln -rs sites-available/all sites-enabled/
 ADD cache.conf /etc/nginx/cache.conf
 
 # Set the syslog configuration.
-RUN echo "cron.*        /var/log/cron.log" >> /etc/rsyslog.conf
+RUN echo "cron.* /var/log/cron.log" >> /etc/rsyslog.conf
 
 # Run the servers.
 EXPOSE 80
