@@ -85,4 +85,4 @@ ADD cache.conf /etc/nginx/cache.conf
 # Run the servers.
 EXPOSE 80
 WORKDIR /
-CMD ["nginx", "-g", "daemon off;"]
+CMD cron & nginx -g "daemon off;"
