@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM onlinelabs/ubuntu
 MAINTAINER Guillaume Claret
 
 RUN apt-get update && apt-get upgrade -y
@@ -11,7 +11,7 @@ RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape
-RUN apt-get install -y ocaml-nox unzip aspcud
+RUN apt-get install -y ocaml-nox bzip2 unzip aspcud
 RUN gem install redcarpet
 
 # Add a user clarus.
