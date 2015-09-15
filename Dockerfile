@@ -10,7 +10,7 @@ RUN apt-get install -y texlive-latex-extra
 RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
-RUN apt-get install -y inkscape
+RUN apt-get install -y inkscape sudo
 RUN apt-get install -y ocaml-nox bzip2 unzip aspcud
 RUN gem install redcarpet
 
@@ -83,4 +83,4 @@ ADD cache.conf /etc/nginx/cache.conf
 # Run the servers.
 EXPOSE 80
 WORKDIR /
-CMD while true; do sudo -u clarus /home/clarus/opam_website.sh && sleep 1h; done & nginx -g "daemon off;"
+CMD while true; do sleep 1m; sudo -u clarus /home/clarus/opam_website.sh && sleep 1h; done & nginx -g "daemon off;"
