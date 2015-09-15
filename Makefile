@@ -1,5 +1,5 @@
 build:
-	touch force_update
+	date >force_update
 	docker build --tag=web .
 
 test:
