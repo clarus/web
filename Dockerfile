@@ -34,7 +34,7 @@ USER root
 RUN make install
 USER clarus
 RUN opam init && opam repo add coq-released https://coq.inria.fr/opam/released
-RUN opam install -y coq:io:system:ocaml
+RUN opam install -y coq-io-system-ocaml
 
 # Hack: we force to rebuild the container here.
 ADD force_update /
@@ -63,10 +63,10 @@ RUN make
 WORKDIR ..
 
 # Add OpamWebsite.
-RUN curl -L https://github.com/coq-io/opam-website/archive/1.3.2.tar.gz |tar -xz
+RUN curl -L https://github.com/coq-io/opam-website/archive/1.4.0.tar.gz |tar -xz
 RUN mv opam-website-* opam-website
 WORKDIR opam-website/extraction
-RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.3.2/opamWebsite.ml >opamWebsite.ml
+RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.4.0/opamWebsite.ml >opamWebsite.ml
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
 ADD opam_website.sh /home/clarus/
 RUN /home/clarus/opam_website.sh
