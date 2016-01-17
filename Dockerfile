@@ -1,4 +1,4 @@
-FROM onlinelabs/ubuntu
+FROM ubuntu
 MAINTAINER Guillaume Claret
 
 RUN apt-get update && apt-get upgrade -y
