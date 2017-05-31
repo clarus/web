@@ -27,8 +27,8 @@ ADD make_reports.rb /home/clarus/projects/make_reports.rb
 RUN ruby make_reports.rb
 
 # Install OPAM.
-RUN curl -L https://github.com/ocaml/opam/archive/1.2.2.tar.gz |tar -xz
-WORKDIR opam-1.2.2
+RUN curl -L https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz |tar -xz
+WORKDIR opam-full-1.2.2
 RUN ./configure && make lib-ext && make
 USER root
 RUN make install
