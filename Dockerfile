@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:14.04
 MAINTAINER Guillaume Claret
 
 RUN apt-get update && apt-get upgrade -y
@@ -11,7 +11,7 @@ RUN apt-get install -y texlive-fonts-recommended
 RUN apt-get install -y texlive-fonts-extra
 RUN apt-get install -y texlive-lang-french texlive-math-extra
 RUN apt-get install -y inkscape sudo
-RUN apt-get install -y ocaml-nox bzip2 unzip aspcud
+RUN apt-get install -y ocaml-nox bzip2 unzip aspcud pkg-config
 RUN gem install redcarpet
 
 # Add a user clarus.
