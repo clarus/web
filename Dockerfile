@@ -26,15 +26,25 @@ WORKDIR projects
 ADD make_reports.rb /home/clarus/projects/make_reports.rb
 RUN ruby make_reports.rb
 
+# Install OCaml.
+WORKDIR /home/clarus
+RUN curl -L https://github.com/ocaml/ocaml/archive/4.02.3.tar.gz |tar -xz
+WORKDIR ocaml-4.02.3
+RUN ./configure && make world.opt
+USER root
+RUN make install
+USER clarus
+
 # Install OPAM.
-RUN curl -L https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz |tar -xz
-WORKDIR opam-full-1.2.2
+WORKDIR /home/clarus
+RUN curl -L https://github.com/ocaml/opam/releases/download/2.0.4/opam-full-2.0.4.tar.gz |tar -xz
+WORKDIR opam-full-2.0.4
 RUN ./configure && make lib-ext && make
 USER root
 RUN make install
 USER clarus
-RUN opam init && opam repo add coq-released https://coq.inria.fr/opam/released
-RUN opam install -y coq-io-system-ocaml
+RUN opam init -n --disable-sandboxing && opam repo add coq-released https://coq.inria.fr/opam/released
+RUN opam install -y coq-io-system-ocaml.2.3.0
 
 # Hack: we force to rebuild the container here.
 ADD force_update /
@@ -63,10 +73,10 @@ RUN make
 WORKDIR ..
 
 # Add OpamWebsite.
-RUN curl -L https://github.com/coq-io/opam-website/archive/1.5.0.tar.gz |tar -xz
+RUN curl -L https://github.com/coq-io/opam-website/archive/1.6.0.tar.gz |tar -xz
 RUN mv opam-website-* opam-website
 WORKDIR opam-website/extraction
-RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.5.0/opamWebsite.ml >opamWebsite.ml
+RUN curl -L https://github.com/coq-io/opam-website/releases/download/1.6.0/opamWebsite.ml >opamWebsite.ml
 RUN curl -L https://github.com/clarus/coq-red-css/releases/download/coq-blog.1.0.2/style.min.css >html/style.min.css
 ADD opam_website.sh /home/clarus/
 RUN /home/clarus/opam_website.sh
@@ -83,4 +93,4 @@ ADD cache.conf /etc/nginx/cache.conf
 # Run the servers.
 EXPOSE 80
 WORKDIR /
-CMD while true; do sleep 1m; sudo -u clarus /home/clarus/opam_website.sh && sleep 1h; done & nginx -g "daemon off;"
+CMD while true; do sleep 1h; sudo -u clarus /home/clarus/opam_website.sh; done & nginx -g "daemon off;"
