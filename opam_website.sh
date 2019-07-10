@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export PATH=$PATH:/usr/local/bin
 
 cd /home/clarus/www/opam-website/extraction
