@@ -93,4 +93,4 @@ ADD cache.conf /etc/nginx/cache.conf
 # Run the servers.
 EXPOSE 80
 WORKDIR /
-CMD while true; do sleep 1h; sudo -u clarus /home/clarus/opam_website.sh; done & nginx -g "daemon off;"
+CMD while true; do sleep 12h; sudo -u clarus /home/clarus/opam_website.sh; done & nginx -g "daemon off;"
