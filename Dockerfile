@@ -24,7 +24,7 @@ WORKDIR /home/clarus
 RUN mkdir projects
 WORKDIR projects
 ADD make_reports.rb /home/clarus/projects/make_reports.rb
-RUN ruby make_reports.rb
+#RUN ruby make_reports.rb
 
 # Install OCaml.
 WORKDIR /home/clarus
@@ -51,7 +51,7 @@ ADD force_update /
 
 # Add the main website.
 WORKDIR /home/clarus
-RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/default.tar.bz2 |tar -xj
+RUN curl -L https://bitbucket.org/guillaumeclaret/www/get/master.tar.gz |tar -xz
 RUN mv guillaumeclaret-www-* www
 WORKDIR www
 RUN ruby make.rb
